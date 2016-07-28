@@ -13,7 +13,7 @@ namespace Chessinconsolebecausewhy.Model
         List<string> lines = new List<string>();
         const int asciibal = 65;
         const int firstbal = 49;
-        const int arrayrange = 8;
+        const int arrayrange = 7;
         Model.BoardSquare[,] Board;
         public Fileinput(string path, Model.BoardSquare[,] board)
         {
