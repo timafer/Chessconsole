@@ -43,28 +43,28 @@ namespace Chessinconsolebecausewhy.Model
         {
             foreach (string s in lines) {
                 string[] result = s.Split(' ');
-                if (result.Length==1)
+                if (result.Length == 1)
                 {
                     string piece = processplace(s);
-                    Console.WriteLine("-place the "+piece+" on "+s[2]+s[3]);
-                    int t1 = char.ToUpper(s[2]) - asciibal;
-                    int t2 = char.ToUpper(s[3]) - firstbal;
-                    Console.WriteLine(""+t1+t2);
-                    Board[(char.ToUpper(s[2]) - asciibal), char.ToUpper(s[3])-firstbal].contains = piece;
+                    Console.WriteLine("-place the " + piece + " on " + s[2] + s[3]);
+                    Board[(char.ToUpper(s[2]) - asciibal), char.ToUpper(s[3]) - firstbal].contains = piece;
                 }
-                else if (result.Length==2)
+                else if (result.Length == 2)
                 {
                     Console.WriteLine(prossesmove(result));
                 }
                 else if (result.Length == 4)
                 {
-                    Console.WriteLine("4 hit");
+                    string[] move1 = { result[0], result[1] };
+                    string[] move2 = { result[2], result[3]};
+                    Console.WriteLine(prossesmove(move1)+", "+ prossesmove(move2));
                 }
                 else
                 {
                     Console.WriteLine("Invalid line");
                 }
             }
+            Controler.Control.Board = Board;
         }
         public string processplace(string line)
         {

@@ -9,7 +9,7 @@ namespace Chessinconsolebecausewhy.Controler
     class Control
     {
         string filepath;
-        Model.BoardSquare[,] Board = new Model.BoardSquare[8, 8];
+        public static Model.BoardSquare[,] Board = new Model.BoardSquare[8, 8];
         public Control(string filepathintial)
         {
             filepath = filepathintial;
