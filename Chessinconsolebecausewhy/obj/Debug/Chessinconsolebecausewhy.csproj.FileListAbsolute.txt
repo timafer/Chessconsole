@@ -1,0 +1,6 @@
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Debug\Chessinconsolebecausewhy.exe.config
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Debug\Chessinconsolebecausewhy.exe
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Debug\Chessinconsolebecausewhy.pdb
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\obj\Debug\Chessinconsolebecausewhy.csprojResolveAssemblyReference.cache
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\obj\Debug\Chessinconsolebecausewhy.exe
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\obj\Debug\Chessinconsolebecausewhy.pdb

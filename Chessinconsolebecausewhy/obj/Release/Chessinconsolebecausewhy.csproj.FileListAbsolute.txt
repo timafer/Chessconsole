@@ -1,0 +1,5 @@
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Release\Chessinconsolebecausewhy.exe.config
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Release\Chessinconsolebecausewhy.exe
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\bin\Release\Chessinconsolebecausewhy.pdb
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\obj\Release\Chessinconsolebecausewhy.exe
+D:\c#\Chessinconsolebecausewhy\Chessinconsolebecausewhy\obj\Release\Chessinconsolebecausewhy.pdb
