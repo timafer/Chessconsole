@@ -16,7 +16,14 @@ namespace Chessinconsolebecausewhy.Model
         }
         public override bool movement(int x1, int x2, int y1, int y2)
         {
-            return true;
+            //if ((x2==x1&&y1!=y2)||(y1==y2&&x1!=x2)||(x2 - x1 == y2 - y1 && x1 != x2))
+            //{
+                return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
     }
 }

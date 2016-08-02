@@ -24,7 +24,7 @@ namespace Chessinconsolebecausewhy.Controler
             Model.Fileinput finput = new Model.Fileinput(filepath);
             input = finput.runinput();
             process();
-            board.print();
+            //board.print();
         }
         public void process()
         {
@@ -67,7 +67,7 @@ namespace Chessinconsolebecausewhy.Controler
                     }
                     else
                     {
-                        String pc2 = Model.prossess.prossesmove(result, board);
+                       
                         int x1 = char.ToUpper(result[0][0]) - asciibal;
                         int y1 = char.ToUpper(result[0][1]) - firstbal;
                         int x2 = char.ToUpper(result[1][0]) - asciibal;
@@ -79,6 +79,7 @@ namespace Chessinconsolebecausewhy.Controler
                         }
                         else
                         {
+                            String pc2 = Model.prossess.prossesmove(result, board);
                             if (pc2[0] != 'E')
                             {
                                 Console.Write("-Moved the " + board.Piececolor(x2, y2) + " " + board.Piecename(x2, y2) + " at " + result[0][0] + result[0][1] + " to " + result[1][0] + result[1][1]);
@@ -132,6 +133,7 @@ namespace Chessinconsolebecausewhy.Controler
                 else
                 {
                     Console.WriteLine("Invalid line");
+                    Console.WriteLine();
                 }
                 }
             }

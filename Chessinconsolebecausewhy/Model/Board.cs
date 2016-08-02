@@ -102,10 +102,10 @@ namespace Chessinconsolebecausewhy.Model
                 board[x1, y1].piece=null;
                 success = true;
             }
-            if (success)
-            {
-                print();
-            }
+            //if (success)
+            //{
+            //    print();
+            //}
             return success;
 
         }
@@ -120,10 +120,10 @@ namespace Chessinconsolebecausewhy.Model
                 board[x1, y1].piece = null;
                 success = true;
             }
-            if (success)
-            {
-                print();
-            }
+            //if (success)
+            //{
+            //    print();
+            //}
             return success;
 
         }
@@ -142,10 +142,10 @@ namespace Chessinconsolebecausewhy.Model
                 board[x3, y3].piece = null;
                 success = true;
             }
-            if (success)
-            {
-                print();
-            }
+            //if (success)
+            //{
+            //    print();
+            //}
             return success;
         }
         public void print()
