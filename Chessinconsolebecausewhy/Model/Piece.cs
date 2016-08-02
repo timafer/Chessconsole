@@ -9,6 +9,7 @@ namespace Chessinconsolebecausewhy.Model
     abstract class Piece
     {
         public abstract string name { get; set; }
-        public abstract bool movement();
+        public abstract bool hasmoved { get; set; }
+        public abstract bool movement(int x1,int x2,int y1,int y2);
     }
 }

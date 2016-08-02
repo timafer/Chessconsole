@@ -22,26 +22,35 @@ namespace Chessinconsolebecausewhy.Model
         public string Piecename(int x,int y)
         {
             string name = "";
-            if (board[x,y].piece==null)
+            if (x < 8 && y < 8)
             {
-                name = "ERROR";
-            }
-            else
-            {
-                name = board[x, y].piece.name;
+                if (board[x, y].piece == null)
+                {
+                    name = "ERROR";
+                }
+                else
+                {
+                    name = board[x, y].piece.name;
+                }
             }
             return name;
         }
-        public bool Piececolor(int x, int y)
+        public string Piececolor(int x, int y)
         {
-            bool iswhite=false;
-            if (board[x, y].piece == null)
+            string iswhite="ERROR";
+            if (x<8&&y<8)
             {
-            }
-            else
-            {
-                iswhite = board[x, y].iswhite;
-            }
+                if (board[x, y].piece != null)
+                {
+                    if (board[x, y].iswhite)
+                    {
+                        iswhite = "White";
+                    }
+                    else
+                    {
+                        iswhite = "Black";
+                    }
+                } }
             return iswhite;
         }
         public bool place(int x,int y,bool iswhite,string piece)
@@ -72,7 +81,7 @@ namespace Chessinconsolebecausewhy.Model
                         success = true;
                         break;
                     case "Pawn":
-                        board[x, y].piece = new Pawn(); success = true;
+                        board[x, y].piece = new Pawn();
                         success = true;
                         break;
                     default:
@@ -80,44 +89,55 @@ namespace Chessinconsolebecausewhy.Model
                 }
                 board[x, y].iswhite = iswhite;
             }
+            print();
             return success;
         }
-        public bool move(int x1,int x2,int y1,int y2)
+        public bool move(int x1,int y1,int x2,int y2)
         {
             bool success = false;
-            if (board[x2, y2].piece == null&& board[x1, y1].piece != null&& board[x1, y1].piece.movement)
+            if (board[x2, y2].piece == null && board[x1, y1].piece != null && board[x1, y1].piece.movement(x1, x2, y1, y2))
             {
                 board[x2, y2].piece = board[x1, y1].piece;
                 board[x2, y2].iswhite = board[x1, y1].iswhite;
+                board[x2, y2].piece.hasmoved = true;
                 board[x1, y1].piece=null;
+                success = true;
             }
+            print();
             return success;
 
         }
-        public bool capture(int x1,int x2, int y1, int y2)
+        public bool capture(int x1, int y1, int x2, int y2)
         {
             bool success = false;
-            if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x1, y1].piece.movement)
+            if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x1, y1].piece.movement(x1,x2,y1,y2))
             {
                 board[x2, y2].piece = board[x1, y1].piece;
                 board[x2, y2].iswhite = board[x1, y1].iswhite;
+                board[x2, y2].piece.hasmoved = true;
                 board[x1, y1].piece = null;
+                success = true;
             }
+            print();
             return success;
 
         }
-        public bool castle(int x1, int x2, int y1, int y2)
+        public bool castle(int x1, int y1, int x2, int y2)
         {
             bool success = false;
-            if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x2, y2].piece.movement)
+            if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x2, y2].piece.movement(x1, x2, y1, y2))
             {
                 Piece tempp = board[x2, y2].piece;
                 bool tempc = board[x2, y2].iswhite;
                 board[x2, y2].piece = board[x1, y1].piece;
                 board[x2, y2].iswhite = board[x1, y1].iswhite;
+                board[x2, y2].piece.hasmoved = true;
                 board[x1, y1].piece = tempp;
                 board[x1, y1].iswhite = tempc;
+                board[x1, y1].piece.hasmoved = true;
+                success = true;
             }
+            print();
             return success;
         }
         public void print()
@@ -140,7 +160,7 @@ namespace Chessinconsolebecausewhy.Model
                             }
                             else
                             {
-                                Console.Write("BN");
+                                Console.Write(" BN");
                             }
                         }
                         else
@@ -151,7 +171,7 @@ namespace Chessinconsolebecausewhy.Model
                             }
                             else
                             {
-                                Console.Write(" B"+board[x, y].piece.name[0]);
+                                Console.Write(" B"+board[x,y].piece.name[0]);
                             }
                         }
                     }
@@ -160,6 +180,5 @@ namespace Chessinconsolebecausewhy.Model
             }
         }
     }
-
-    }
 }
+

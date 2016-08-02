@@ -11,8 +11,6 @@ namespace Chessinconsolebecausewhy.Model
     {
         string filepath = "";
         List<string> lines = new List<string>();
-
-        Model.BoardSquare[,] Board;
         public Fileinput(string path)
         {
             filepath = path;

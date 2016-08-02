@@ -9,13 +9,14 @@ namespace Chessinconsolebecausewhy.Model
     class Bishop : Piece
     {
         public override string name { get; set; }
+        public override bool hasmoved { get; set; }
         public Bishop()
         {
             name = "Bishop";
         }
-        public override bool movement()
+        public override bool movement(int x1, int x2, int y1, int y2)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

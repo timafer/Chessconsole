@@ -8,6 +8,9 @@ namespace Chessinconsolebecausewhy.Model
 {
      static class prossess
     {
+        const int asciibal = 65;
+        const int firstbal = 49;
+        const int arrayrange = 7;
         public static bool testrange(int i1, int i2)
         {
             bool outofrange = false;
@@ -17,100 +20,105 @@ namespace Chessinconsolebecausewhy.Model
             }
             return outofrange;
         }
-        public static string processplace(string line)
+        public static void processplace(string line,Board board)
         {
             line = line.ToUpper();
-            string result = "";
+            bool iswhite = false;
             switch (line[1])
             {
                 case 'L':
-                    result += "White ";
+                    iswhite = true;
                     break;
                 case 'D':
-                    result += "Black ";
+                    iswhite = false;
                     break;
                 default:
-                    result += "Invalid Color";
                     break;
 
             }
             switch (line[0])
             {
                 case 'K':
-                    result += "King";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal,iswhite ,"King");
                     break;
                 case 'Q':
-                    result += "Queen";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Queen");
                     break;
                 case 'B':
-                    result += "Bishop";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Bishop");
                     break;
                 case 'N':
-                    result += "Knight";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Knight");
                     break;
                 case 'R':
-                    result += "Rook";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Rook");
                     break;
                 case 'P':
-                    result += "Pawn";
+                    board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Pawn");
                     break;
                 default:
-                    result += "invalid piece";
                     break;
             }
-            return result;
         }
-        public static string prossesmove(string[] result)
+        public static string prossesmove(string[] result,Board board)
         {
+            string print="Place Holder";
             int s11 = char.ToUpper(result[0][0]) - asciibal;
             int s12 = char.ToUpper(result[0][1]) - firstbal;
             int s21 = char.ToUpper(result[1][0]) - asciibal;
             int s22 = char.ToUpper(result[1][1]) - firstbal;
-            string print;
+            if (board.Piecename(s21, s22)!="ERROR")
+            {
+                print = board.Piececolor(s21, s22) + " " + board.Piecename(s21, s22);
+            }
+
             if (testrange(s11, s12))
             {
-                print = "First placement out of range";
+                Console.WriteLine("ERROR OUT OF RANGE");
+                print = "ERROR OUT OF RANGE";
             }
             else if (testrange(s21, s22))
             {
-                print = "Second placement out of range";
+                Console.WriteLine("ERROR OUT OF RANGE");
+                print = "ERROR OUT OF RANGE";
             }
             else {
                 if (result[0].Length == 2)
                 {
-                    if (Board[s11, s12].contains.Equals("Empty"))
+                    if (board.move(s11, s12, s21, s22))
                     {
-                        print = ("-Tried to move piece at " + result[0][0] + result[0][1] + " to " + result[1][0] + result[1][1] + " but it was empty");
+                    }
+                    else {
+                        Console.WriteLine("ERROR INVALAD MOVE NOT MOVED");
+                        print = "ERROR INVALAD MOVE NOT MOVED";
+                    }
+                }
+                else if (result.Length == 4)
+                {
+                    if (board.castle(s11, s12, s21, s22))
+                    {
                     }
                     else
                     {
-                        print = ("-moved the " + Board[s11, s12].contains + " at " + result[0][0] + result[0][1] + " to " + result[1][0] + result[1][1]);
-                        Board[s21, s22].contains = Board[s11, s12].contains;
-                        Board[s11, s12].contains = "Empty";
+                        Console.WriteLine("ERROR INVALID CASTLE NOT MOVED");
+                        print = "ERROR INVALID CASTLE NOT MOVED";
                     }
                 }
                 else if (result[0][2].Equals('*'))
                 {
-                    if (Board[s11, s12].contains.Equals("Empty"))
+                    if (board.capture(s11, s12, s21, s22))
                     {
-                        print = ("-Tried to move piece at " + result[0][0] + result[0][1] + " to take piece at " + result[1][0] + result[1][1] + " but it was empty");
-                    }
-                    else if (Board[s11, s12].contains.Equals("Empty"))
-                    {
-                        print = ("-moved the " + Board[s11, s12].contains + " at " + result[0][0] + result[0][1] + " to try to take the piece at" + result[1][0] + result[1][1] + "But it was empty");
-                        Board[s21, s22].contains = Board[s11, s12].contains;
-                        Board[s11, s12].contains = "Empty";
                     }
                     else
                     {
-                        print = ("-moved the " + Board[s11, s12].contains + " at " + result[0][0] + result[0][1] + " to " + result[1][0] + result[1][1] + " and took the " + Board[s21, s22].contains);
-                        Board[s21, s22].contains = Board[s11, s12].contains;
-                        Board[s11, s12].contains = "Empty";
+                        Console.WriteLine("ERROR INVALID NOT MOVED AND PIECE NOT TAKEN");
+                        print = "ERROR INVALID NOT MOVED AND PIECE NOT TAKEN";
                     }
                 }
                 else
                 {
-                    print = ("Invalid 3 charater on movement");
+                    Console.WriteLine("ERROR INVALID ELMENT AT INDEX 3");
+                    print = "ERROR INVALID ELMENT AT INDEX 3";
                 }
             }
             return print;

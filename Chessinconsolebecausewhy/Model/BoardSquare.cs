@@ -10,12 +10,10 @@ namespace Chessinconsolebecausewhy.Model
     {
         public bool iswhite{ get; set;}
         public Piece piece {get; set;}
-        bool hasmoved { get;  set; }
         public BoardSquare(bool _iswhite,Piece _piece)
         {
             iswhite = _iswhite;
             piece = _piece;
-            hasmoved = false;
         }
     }
 }

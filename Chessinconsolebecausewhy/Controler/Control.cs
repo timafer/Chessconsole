@@ -22,7 +22,8 @@ namespace Chessinconsolebecausewhy.Controler
         public void start()
         {
             Model.Fileinput finput = new Model.Fileinput(filepath);
-            input=finput.runinput();
+            input = finput.runinput();
+            process();
         }
         public void process()
         {
@@ -37,19 +38,44 @@ namespace Chessinconsolebecausewhy.Controler
                     }
                     else
                     {
-                        string piece = Model.prossess.processplace(s);
-                        Console.WriteLine("-place the " + piece + " on " + s[2] + s[3]);
+                        Model.prossess.processplace(s,board);
+                            Console.WriteLine("-Placed the " +board.Piececolor(char.ToUpper(s[2])-asciibal,char.ToUpper(s[3])-firstbal)+" "+board.Piecename(char.ToUpper(s[2]) - asciibal, char.ToUpper(s[3]) - firstbal) +" on " + s[2] + s[3]);
                     }
                 }
                 else if (result.Length == 2)
                 {
-                    Console.WriteLine(Model.prossess.prossesmove(result));
+                    String pc2=Model.prossess.prossesmove(result, board);
+                    int x1 = char.ToUpper(result[0][0]) - asciibal;
+                    int y1 = char.ToUpper(result[0][1]) - firstbal;
+                    int x2 = char.ToUpper(result[1][0]) - asciibal;
+                    int y2 = char.ToUpper(result[1][1]) - firstbal;
+                    if (pc2[0] != 'E')
+                    {
+                        Console.Write("-Moved the " + board.Piececolor(x2, y2)+" "+ board.Piecename(x2, y2)+" at "+result[0][0]+result[0][1]+" to "+ result[1][0] + result[1][1]);
+                        if (result[0].Length==3)
+                        {
+                            if (result[0][2] == '*')
+                            {
+                                Console.WriteLine(" and captured "+pc2);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                        }
+                    }
                 }
                 else if (result.Length == 4)
                 {
-                    string[] move1 = { result[0], result[1] };
-                    string[] move2 = { result[2], result[3] };
-                    Console.WriteLine(Model.prossess.(move1) + ", " + Model.prossess.prossesmove(move2));
+                    int x1 = char.ToUpper(result[0][0]) - asciibal;
+                    int y1 = char.ToUpper(result[0][1]) - firstbal;
+                    int x2 = char.ToUpper(result[1][0]) - asciibal;
+                    int y2 = char.ToUpper(result[1][1]) - firstbal;
+                    string e=Model.prossess.prossesmove(result, board);
+                    if (e[0] != 'E')
+                    {
+                        Console.WriteLine("-Switched the "+board.Piececolor(x2,y2)+" "+board.Piecename(x2,y2)+" at "+ result[0][0] + result[0][1] +" and the "+ board.Piececolor(x1, y1) + " " + board.Piecename(x1, y1)+" at "+ result[1][0] + result[1][1]);
+                    }
                 }
                 else
                 {
@@ -58,4 +84,5 @@ namespace Chessinconsolebecausewhy.Controler
             }
         }
 
+    }
 }
