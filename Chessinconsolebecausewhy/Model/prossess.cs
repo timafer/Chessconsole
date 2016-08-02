@@ -20,9 +20,10 @@ namespace Chessinconsolebecausewhy.Model
             }
             return outofrange;
         }
-        public static void processplace(string line,Board board)
+        public static bool processplace(string line,Board board)
         {
             line = line.ToUpper();
+            bool success = true;
             bool iswhite = false;
             switch (line[1])
             {
@@ -33,6 +34,9 @@ namespace Chessinconsolebecausewhy.Model
                     iswhite = false;
                     break;
                 default:
+                    Console.WriteLine();
+                    Console.WriteLine("Invalid color");
+                    success = false;
                     break;
 
             }
@@ -57,8 +61,19 @@ namespace Chessinconsolebecausewhy.Model
                     board.place(char.ToUpper(line[2]) - asciibal, char.ToUpper(line[3]) - firstbal, iswhite, "Pawn");
                     break;
                 default:
+                    if (success)
+                    {
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("Invalid Piece");
+                    success = false;
                     break;
             }
+            if (!success)
+            {
+                Console.WriteLine();
+            }
+            return success;
         }
         public static string prossesmove(string[] result,Board board)
         {
@@ -74,16 +89,16 @@ namespace Chessinconsolebecausewhy.Model
 
             if (testrange(s11, s12))
             {
-                Console.WriteLine("ERROR OUT OF RANGE");
                 print = "ERROR OUT OF RANGE";
+                Console.WriteLine();
             }
             else if (testrange(s21, s22))
             {
-                Console.WriteLine("ERROR OUT OF RANGE");
                 print = "ERROR OUT OF RANGE";
+                Console.WriteLine();
             }
             else {
-                if (result[0].Length == 2)
+                if (result.Length==2&&result[1].Length == 2)
                 {
                     if (board.move(s11, s12, s21, s22))
                     {
@@ -95,16 +110,21 @@ namespace Chessinconsolebecausewhy.Model
                 }
                 else if (result.Length == 4)
                 {
-                    if (board.castle(s11, s12, s21, s22))
+                    int s31 = char.ToUpper(result[2][0]) - asciibal;
+                    int s32 = char.ToUpper(result[2][1]) - firstbal;
+                    int s41 = char.ToUpper(result[3][0]) - asciibal;
+                    int s42 = char.ToUpper(result[3][1]) - firstbal;
+                    if (board.castle(s11, s12, s21, s22,s31,s32,s41,s42))
                     {
                     }
                     else
                     {
                         Console.WriteLine("ERROR INVALID CASTLE NOT MOVED");
+                        Console.WriteLine();
                         print = "ERROR INVALID CASTLE NOT MOVED";
                     }
                 }
-                else if (result[0][2].Equals('*'))
+                else if (result[1][2].Equals('*'))
                 {
                     if (board.capture(s11, s12, s21, s22))
                     {
@@ -112,12 +132,14 @@ namespace Chessinconsolebecausewhy.Model
                     else
                     {
                         Console.WriteLine("ERROR INVALID NOT MOVED AND PIECE NOT TAKEN");
+                        Console.WriteLine();
                         print = "ERROR INVALID NOT MOVED AND PIECE NOT TAKEN";
                     }
                 }
                 else
                 {
                     Console.WriteLine("ERROR INVALID ELMENT AT INDEX 3");
+                    Console.WriteLine();
                     print = "ERROR INVALID ELMENT AT INDEX 3";
                 }
             }

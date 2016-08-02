@@ -89,7 +89,6 @@ namespace Chessinconsolebecausewhy.Model
                 }
                 board[x, y].iswhite = iswhite;
             }
-            print();
             return success;
         }
         public bool move(int x1,int y1,int x2,int y2)
@@ -103,7 +102,10 @@ namespace Chessinconsolebecausewhy.Model
                 board[x1, y1].piece=null;
                 success = true;
             }
-            print();
+            if (success)
+            {
+                print();
+            }
             return success;
 
         }
@@ -118,30 +120,38 @@ namespace Chessinconsolebecausewhy.Model
                 board[x1, y1].piece = null;
                 success = true;
             }
-            print();
+            if (success)
+            {
+                print();
+            }
             return success;
 
         }
-        public bool castle(int x1, int y1, int x2, int y2)
+        public bool castle(int x1, int y1, int x2, int y2,int x3,int y3,int x4,int y4)
         {
             bool success = false;
-            if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x2, y2].piece.movement(x1, x2, y1, y2))
+            if (board[x2, y2].piece == null && board[x1, y1].piece != null && board[x4, y4].piece == null && board[x3, y3].piece != null)
             {
-                Piece tempp = board[x2, y2].piece;
-                bool tempc = board[x2, y2].iswhite;
                 board[x2, y2].piece = board[x1, y1].piece;
                 board[x2, y2].iswhite = board[x1, y1].iswhite;
                 board[x2, y2].piece.hasmoved = true;
-                board[x1, y1].piece = tempp;
-                board[x1, y1].iswhite = tempc;
-                board[x1, y1].piece.hasmoved = true;
+                board[x1, y1].piece = null;
+                board[x4, y4].piece = board[x3, y3].piece;
+                board[x4, y4].iswhite = board[x3, y3].iswhite;
+                board[x4, y4].piece.hasmoved = true;
+                board[x3, y3].piece = null;
                 success = true;
             }
-            print();
+            if (success)
+            {
+                print();
+            }
             return success;
         }
         public void print()
         {
+            Console.WriteLine();
+            Console.WriteLine();
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -178,6 +188,8 @@ namespace Chessinconsolebecausewhy.Model
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine();
+            Console.WriteLine();
         }
     }
 }
