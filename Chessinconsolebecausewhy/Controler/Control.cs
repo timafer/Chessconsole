@@ -9,53 +9,53 @@ namespace Chessinconsolebecausewhy.Controler
     class Control
     {
         string filepath;
-        public static Model.BoardSquare[,] Board = new Model.BoardSquare[8, 8];
+        Model.Board board;
+        List<string> input;
+        const int asciibal = 65;
+        const int firstbal = 49;
+        const int arrayrange = 7;
         public Control(string filepathintial)
         {
             filepath = filepathintial;
-            makeboard();
+            board = new Model.Board();
         }
         public void start()
         {
-            Model.Fileinput finput = new Model.Fileinput(filepath,Board);
-            finput.runinput();
-            printboard();
+            Model.Fileinput finput = new Model.Fileinput(filepath);
+            input=finput.runinput();
         }
-        public void makeboard()
+        public void process()
         {
-            for(int i=0;i<8;i++)
+            foreach (string s in input)
             {
-                for (int o = 0; o < 8; o++)
+                string[] result = s.Split(' ');
+                if (result.Length == 1)
                 {
-                    Board[o, i] = new Model.BoardSquare("Empty");
-                }
-            }
-        }
-        public void printboard()
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int o = 0; o < 8; o++)
-                {
-                    if (Board[i, o].contains.Equals("Empty"))
+                    if (Model.prossess.testrange(char.ToUpper(s[2]) - asciibal, char.ToUpper(s[3]) - firstbal))
                     {
-                        Console.Write(" --");
+                        Console.WriteLine("Out of range");
                     }
                     else
                     {
-                        string[] result = Board[i, o].contains.Split(' ');
-                        if (result[1].Equals("Knight"))
-                        {
-                            Console.Write(" " + result[0][0] + "N");
-                        }
-                        else
-                        {
-                            Console.Write(" " + result[0][0] + result[1][0]);
-                        }
+                        string piece = Model.prossess.processplace(s);
+                        Console.WriteLine("-place the " + piece + " on " + s[2] + s[3]);
                     }
                 }
-                Console.WriteLine();
+                else if (result.Length == 2)
+                {
+                    Console.WriteLine(Model.prossess.prossesmove(result));
+                }
+                else if (result.Length == 4)
+                {
+                    string[] move1 = { result[0], result[1] };
+                    string[] move2 = { result[2], result[3] };
+                    Console.WriteLine(Model.prossess.(move1) + ", " + Model.prossess.prossesmove(move2));
+                }
+                else
+                {
+                    Console.WriteLine("Invalid line");
+                }
             }
         }
-    }
+
 }

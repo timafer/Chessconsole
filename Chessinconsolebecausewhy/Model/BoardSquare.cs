@@ -8,10 +8,14 @@ namespace Chessinconsolebecausewhy.Model
 {
     class BoardSquare
     {
-        public string contains { get; set; }
-        public BoardSquare(string currentpiece)
+        public bool iswhite{ get; set;}
+        public Piece piece {get; set;}
+        bool hasmoved { get;  set; }
+        public BoardSquare(bool _iswhite,Piece _piece)
         {
-            contains = currentpiece;
+            iswhite = _iswhite;
+            piece = _piece;
+            hasmoved = false;
         }
     }
 }
