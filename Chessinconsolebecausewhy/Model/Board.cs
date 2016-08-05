@@ -81,7 +81,7 @@ namespace Chessinconsolebecausewhy.Model
                         success = true;
                         break;
                     case "Pawn":
-                        board[x, y].piece = new Pawn();
+                        board[x, y].piece = new Pawn(iswhite);
                         success = true;
                         break;
                     default:
@@ -96,16 +96,19 @@ namespace Chessinconsolebecausewhy.Model
             bool success = false;
             if (board[x2, y2].piece == null && board[x1, y1].piece != null && board[x1, y1].piece.movement(x1, x2, y1, y2))
             {
-                board[x2, y2].piece = board[x1, y1].piece;
-                board[x2, y2].iswhite = board[x1, y1].iswhite;
-                board[x2, y2].piece.hasmoved = true;
-                board[x1, y1].piece=null;
-                success = true;
+                if (checkpath(x1, y1, x2, y2)||board[x1,y1].piece is Knight)
+                {
+                    board[x2, y2].piece = board[x1, y1].piece;
+                    board[x2, y2].iswhite = board[x1, y1].iswhite;
+                    board[x2, y2].piece.hasmoved = true;
+                    board[x1, y1].piece = null;
+                    success = true;
+                }
             }
-            //if (success)
-            //{
-            //    print();
-            //}
+            if (success)
+            {
+                print();
+            }
             return success;
 
         }
@@ -114,16 +117,23 @@ namespace Chessinconsolebecausewhy.Model
             bool success = false;
             if (board[x2, y2].piece != null && board[x1, y1].piece != null && board[x1, y1].piece.movement(x1,x2,y1,y2))
             {
-                board[x2, y2].piece = board[x1, y1].piece;
-                board[x2, y2].iswhite = board[x1, y1].iswhite;
-                board[x2, y2].piece.hasmoved = true;
-                board[x1, y1].piece = null;
-                success = true;
+                if ((checkpath(x1, y1, x2, y2) || board[x1, y1].piece is Knight)&&(board[x1,y1].iswhite!=board[x2,y2].iswhite))
+                {
+                    board[x2, y2].piece = board[x1, y1].piece;
+                    board[x2, y2].iswhite = board[x1, y1].iswhite;
+                    board[x2, y2].piece.hasmoved = true;
+                    board[x1, y1].piece = null;
+                    success = true;
+                }
+                else
+                {
+                    Console.WriteLine("Are trying to take your own piece?");
+                }
             }
-            //if (success)
-            //{
-            //    print();
-            //}
+            if (success)
+            {
+                print();
+            }
             return success;
 
         }
@@ -132,29 +142,121 @@ namespace Chessinconsolebecausewhy.Model
             bool success = false;
             if (board[x2, y2].piece == null && board[x1, y1].piece != null && board[x4, y4].piece == null && board[x3, y3].piece != null)
             {
-                board[x2, y2].piece = board[x1, y1].piece;
-                board[x2, y2].iswhite = board[x1, y1].iswhite;
-                board[x2, y2].piece.hasmoved = true;
-                board[x1, y1].piece = null;
-                board[x4, y4].piece = board[x3, y3].piece;
-                board[x4, y4].iswhite = board[x3, y3].iswhite;
-                board[x4, y4].piece.hasmoved = true;
-                board[x3, y3].piece = null;
-                success = true;
+                if (checkpath(x1, y1, x2, y2) || board[x1, y1].piece is Knight)
+                {
+                    board[x2, y2].piece = board[x1, y1].piece;
+                    board[x2, y2].iswhite = board[x1, y1].iswhite;
+                    board[x2, y2].piece.hasmoved = true;
+                    board[x1, y1].piece = null;
+                    board[x4, y4].piece = board[x3, y3].piece;
+                    board[x4, y4].iswhite = board[x3, y3].iswhite;
+                    board[x4, y4].piece.hasmoved = true;
+                    board[x3, y3].piece = null;
+                    success = true;
+                }
             }
-            //if (success)
-            //{
-            //    print();
-            //}
+            if (success)
+            {
+                print();
+            }
             return success;
+        }
+        bool checkpath(int x1, int y1, int x2, int y2)
+        {
+            bool success = true;
+            if (y1 == y2 && x1 < x2)
+            {
+                for (int i = x1+1; i<x2; i++)
+                {
+                    if (board[i,y1].piece!=null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if (y1 == y2 && x1 > x2)
+            {
+                for (int i = x1-1; i > x2; i--)
+                {
+                    if (board[i, y1].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if (x1 == x2 && y1 < y2)
+            {
+                for (int i = y1+1; i < y2; i++)
+                {
+                    if (board[x1, i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if (x1 == x2 && y1 > y2)
+            {
+                for (int i = y1-1; i > y2; i--)
+                {
+                    if (board[x1, i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if(y1 > y2&& x1 > x2)
+            { 
+                for (int i = -1; y1+i > y2; i--)
+                {
+                    if (board[x1+i, y1+i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if (y1 < y2 && x1 < x2)
+            {
+                for (int i = 1; y1+i < y2; i++)
+                {
+                    if (board[x1+i, y1+i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else if (y1 > y2 && x1 < x2)
+            {
+                for (int i = 1; x1+i < x2; i++)
+                {
+                    if (board[x1+i, y1-i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; y1+i > y2; i++)
+                {
+                    if (board[x1-i, y1+i].piece != null)
+                    {
+                        success = false;
+                    }
+                }
+            }
+            if (!success)
+            {
+                Console.WriteLine("Piece in the way");
+            }
+                return success;
         }
         public void print()
         {
             Console.WriteLine();
             Console.WriteLine();
-            for (int x = 0; x < 8; x++)
+            for (int y = 0; y < 8; y++)
             {
-                for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
                 {
                     if (board[x, y].piece==null)
                     {

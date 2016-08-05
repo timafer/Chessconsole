@@ -24,7 +24,8 @@ namespace Chessinconsolebecausewhy.Controler
             Model.Fileinput finput = new Model.Fileinput(filepath);
             input = finput.runinput();
             process();
-            //board.print();
+            Console.WriteLine("-----Finshed-----");
+            board.print();
         }
         public void process()
         {
