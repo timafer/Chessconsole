@@ -15,8 +15,52 @@ namespace Chessinconsolebecausewhy.Model
             {
                 for (int o = 0; o < 8; o++)
                 {
-                    board[o, i] = new BoardSquare(true,null);
+                    board[o, i] = new BoardSquare(true, null);
+                    if (i==0||i==7)
+                    {
+                        placeends(i,o);
+                    }
                 }
+            }
+        }
+        public void placeends(int o,int i)
+        {
+            bool b;
+            if (i == 0)
+            {
+                b =  true;
+            }
+            else
+            {
+                b = false;
+            }
+            switch (o)
+            {
+                case 0:
+                    place(i,o,b,"Rook");
+                    break;
+                case 1:
+                    place(i, o, b, "Knight");
+                    break;
+                case 2:
+                    place(i, o, b, "Bishop");
+                    break;
+                case 3:
+                    place(i, o, b, "Queen");
+                    break;
+                case 4:
+                    place(i, o, b, "King");
+                    break;
+                case 5:
+                    place(i, o, b, "Bishop");
+                    break;
+                case 6:
+                    place(i, o, b, "Knight");
+                    break;
+                case 7:
+                    place(i, o, b, "Rook");
+                    break;
+
             }
         }
         public string Piecename(int x,int y)
