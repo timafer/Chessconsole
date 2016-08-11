@@ -8,10 +8,6 @@ namespace Chessinconsolebecausewhy.Model
 {
     class Pawn:Piece
     {
-        public override string name { get; set; }
-        public override bool hasmoved { get; set; }
-        public bool diagplus { get; set; }
-        public bool diagminus { get; set; }
         bool iswhite { get; set; }
         public Pawn(bool Iswhite)
         {
@@ -20,8 +16,12 @@ namespace Chessinconsolebecausewhy.Model
         }
         public override bool movement(int y1, int y2, int x1, int x2)
         {
-            if ((!hasmoved && x2 - x1 == 2&&y1==y2) || (!hasmoved && x2 - x1 == -2 && y1 == y2) || (x2 - x1 == 1 && y1 == y2) || (x2 - x1 == -1 && y1 == y2) || (iswhite && diagminus && y2 - y1 == -1 && x2 - x1 == 1) || (!iswhite && diagminus && x2 - x1 == 1 && x2 - x1 == 1) ||
-                (iswhite && diagplus && x2 - x1 == -1 && x2 - x1 == -1) || (!iswhite && diagplus && x2 - x1 == 1 && x2 - x1 == -1))
+            if ((!hasmoved && x2 - x1 == 2 && y1 == y2) || (!hasmoved && x2 - x1 == -2 && y1 == y2) || (x2 - x1 == 1 && y1 == y2) || (x2 - x1 == -1 && y1 == y2))
+            {
+                return true;
+            }
+            else if((diagminus && y2 - y1 == -1 && x2 - x1 == 1) || (diagminus && y2 - y1 == 1 && x2 - x1 == 1) ||
+                (diagplus && y2 - y1 == -1 && x2 - x1 == -1) || ( diagplus && y2 - y1 == 1 && x2 - x1 == -1))
             {
                 return true;
             }

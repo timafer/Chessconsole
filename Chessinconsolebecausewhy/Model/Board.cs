@@ -8,6 +8,7 @@ namespace Chessinconsolebecausewhy.Model
 {
     class Board
     {
+        public bool iswhiteturn=true;
         public BoardSquare[,] board = new BoardSquare[8, 8];
         public Board()
         {
@@ -15,29 +16,37 @@ namespace Chessinconsolebecausewhy.Model
             {
                 for (int o = 0; o < 8; o++)
                 {
-                    board[o, i] = new BoardSquare(true, null);
-                    if (i==0||i==7)
+                    board[i, o] = new BoardSquare(true, null);
+                    board[i, o].x = i;
+                    board[i, o].y = o;
+                }
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                for (int o = 0; o < 8; o++)
+                {
+                    if (i == 0 || i == 7)
                     {
-                        placeends(i,o);
+                        placeends(o, i);
                     }
                 }
             }
         }
-        public void placeends(int o,int i)
+        public void placeends(int i, int o)
         {
             bool b;
-            if (i == 0)
+            if (o == 0)
             {
-                b =  true;
+                b = true;
             }
             else
             {
                 b = false;
             }
-            switch (o)
+            switch (i)
             {
                 case 0:
-                    place(i,o,b,"Rook");
+                    place(i, o, b, "Rook");
                     break;
                 case 1:
                     place(i, o, b, "Knight");
@@ -63,7 +72,7 @@ namespace Chessinconsolebecausewhy.Model
 
             }
         }
-        public string Piecename(int x,int y)
+        public string Piecename(int x, int y)
         {
             string name = "";
             if (x < 8 && y < 8)
@@ -81,8 +90,8 @@ namespace Chessinconsolebecausewhy.Model
         }
         public string Piececolor(int x, int y)
         {
-            string iswhite="ERROR";
-            if (x<8&&y<8)
+            string iswhite = "ERROR";
+            if (x < 8 && y < 8)
             {
                 if (board[x, y].piece != null)
                 {
@@ -94,8 +103,525 @@ namespace Chessinconsolebecausewhy.Model
                     {
                         iswhite = "Black";
                     }
-                } }
+                }
+            }
             return iswhite;
+        }
+        public void updatecanbehit()
+        {
+            for (int x1 = 0; x1 < 8; x1++)
+            {
+                for (int y1 = 0; y1 < 8; y1++)
+                {
+                    if (board[x1, y1].piece != null)
+                    {
+                        if (board[x1, y1].piece.name == "Bishop" || board[x1, y1].piece.name == "Queen")
+                        {
+                            for (int x2 = 1; x2 < 7; x2++)
+                            {
+                                if (x1 + x2 > 7 || y1 + x2 > 7) { }
+                                else if (checkpath(x1, y1, x1 + x2, y1 + x2))
+                                {
+                                    if (board[x1 + x2, y1 + x2].piece != null)
+                                    {
+                                        if (board[x1 + x2, y1 + x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 + x2].canbehit = true;
+                                            check(board[x1 + x2, y1 + x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                                if (x1 - x2 < 0 || y1 + x2 > 7) { }
+                                else if (checkpath(x1, y1, x1 - x2, y1 + x2))
+                                {
+                                    if (board[x1 - x2, y1 + x2].piece != null)
+                                    {
+                                        if (board[x1 - x2, y1 + x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 + x2].canbehit = true;
+                                            check(board[x1 - x2, y1 + x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1 - x2, y1 + x2].canbehit = true;
+                                    }
+                                   
+                                }
+                                if (x1 + x2 > 7 || y1 - x2 < 0) { }
+                                else if (checkpath(x1, y1, x1 + x2, y1 - x2))
+                                {
+                                    if (board[x1 + x2, y1 - x2].piece != null)
+                                    {
+                                        if (board[x1 + x2, y1 - x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 - x2].canbehit = true;
+                                            check(board[x1 + x2, y1 - x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1 + x2, y1 - x2].canbehit = true;
+                                    }
+                                    
+                                    
+                                }
+                                if (x1 - x2 < 0 || y1 - x2 < 0) { }
+                                else if (checkpath(x1, y1, x1 - x2, y1 - x2))
+                                    if (board[x1 - x2, y1 - x2].piece != null)
+                                    {
+                                        if (board[x1 - x2, y1 - x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 - x2].canbehit = true;
+                                            check(board[x1 - x2, y1 - x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1 - x2, y1 - x2].canbehit = true;
+                                    }
+                            }
+                        }
+                        if (board[x1, y1].piece.name == "Rook" || board[x1, y1].piece.name == "Queen")
+                        {
+                            for (int x2 = 1; x2 < 7; x2++)
+                            {
+                                if (x1 + x2 > 7) { }
+                                else if (checkpath(x1, y1, x1 + x2, y1))
+                                {
+                                    if (board[x1 + x2, y1].piece != null)
+                                    {
+                                        if (board[x1 + x2, y1].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 ].canbehit = true;
+                                            check(board[x1 + x2, y1]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1 + x2, y1].canbehit = true;
+                                    }
+                                 }
+                                if (x1 - x2 < 0) { }
+                                else if (checkpath(x1, y1, x1 - x2, y1))
+                                {
+                                    if (board[x1 - x2, y1].piece != null)
+                                    {
+                                        if (board[x1 - x2, y1].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1].canbehit = true;
+                                            check(board[x1 - x2, y1]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1 - x2, y1].canbehit = true;
+                                    }
+                                }
+                                if (y1 - x2 < 0) { }
+                                else if (checkpath(x1, y1, x1, y1 - x2))
+                                {
+                                    if (board[x1, y1 - x2].piece != null)
+                                    {
+                                        if (board[x1 , y1 - x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 , y1 - x2].canbehit = true;
+                                            check(board[x1, y1 -x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1, y1 - x2].canbehit = true;
+                                    }
+                                }
+                                if (y1 + x2 > 7) { }
+                                else if (checkpath(x1, y1, x1, y1 + x2))
+                                {
+                                    if (board[x1 , y1 + x2].piece != null)
+                                    {
+                                        if (board[x1 , y1 + x2].iswhite != board[x1, y1].iswhite)
+                                        {
+                                            board[x1 , y1 + x2].canbehit = true;
+                                            check(board[x1 , y1 + x2]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        board[x1, y1 + x2].canbehit = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (board[x1, y1].piece.name == "Knight")
+                        { 
+                            if (x1 + 1 > 7|| y1 + 2 > 7) { }
+                            else if (checkpath(x1, y1, x1 + 1, y1+2))
+                            {
+                                if (board[x1 + 1, y1+2].piece != null)
+                                {
+                                    if (board[x1 + 1, y1+2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1+2].canbehit = true;
+                                        check(board[x1 + 1, y1+2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 1, y1+2].canbehit = true;
+                                }
+                            }
+                            if (x1 + 1 > 7 || y1 - 2 < 0) { }
+                            else if (checkpath(x1, y1, x1 + 1, y1 -2))
+                            {
+                                if (board[x1 + 1, y1 - 2].piece != null)
+                                {
+                                    if (board[x1 + 1, y1 - 2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 - 2].canbehit = true;
+                                        check(board[x1 + 1, y1 - 2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 1, y1 - 2].canbehit = true;
+                                }
+                            }
+                            if (x1 - 1 < 0 || y1 + 2 > 7) { }
+                            else if (checkpath(x1, y1, x1 - 1, y1 + 2))
+                            {
+                                if (board[x1 - 1, y1 + 2].piece != null)
+                                {
+                                    if (board[x1 - 1, y1 + 2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 + 2].canbehit = true;
+                                        check(board[x1 - 1, y1 + 2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 1, y1 + 2].canbehit = true;
+                                }
+                            }
+                            if (x1 - 1 <0 || y1 - 2 <0) { }
+                            else if (checkpath(x1, y1, x1 - 1, y1 - 2))
+                            {
+                                if (board[x1 - 1, y1 - 2].piece != null)
+                                {
+                                    if (board[x1 - 1, y1 - 2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 - 2].canbehit = true;
+                                        check(board[x1 - 1, y1 - 2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 1, y1 - 2].canbehit = true;
+                                }
+                            }
+                            if (x1 + 2 > 7 || y1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1 + 2, y1 + 1))
+                            {
+                                if (board[x1 + 2, y1 + 1].piece != null)
+                                {
+                                    if (board[x1 + 2, y1 + 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 2, y1 + 1].canbehit = true;
+                                        check(board[x1 + 2, y1 + 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 2, y1 + 1].canbehit = true;
+                                }
+                            }
+                            if (x1 + 2 > 7 || y1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1 + 2, y1 - 1))
+                            {
+                                if (board[x1 + 2, y1 - 1].piece != null)
+                                {
+                                    if (board[x1 + 2, y1 - 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 2, y1 - 1].canbehit = true;
+                                        check(board[x1 + 2, y1 - 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 2, y1 - 1].canbehit = true;
+                                }
+                            }
+                            if (x1 - 2 < 0 || y1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1 - 2, y1 + 2))
+                            {
+                                if (board[x1 - 2, y1 + 1].piece != null)
+                                {
+                                    if (board[x1 - 2, y1 + 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 2, y1 + 1].canbehit = true;
+                                        check(board[x1 - 2, y1 + 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 2, y1 + 1].canbehit = true;
+                                }
+                            }
+                            if (x1 - 2 < 0 || y1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1 - 2, y1 - 1))
+                            {
+                                if (board[x1 - 2, y1 - 1].piece != null)
+                                {
+                                    if (board[x1 - 2, y1 - 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 2, y1 - 1].canbehit = true;
+                                        check(board[x1 - 1, y1 - 2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 2, y1 - 1].canbehit = true;
+                                }
+                            }
+
+                        }
+                        if (board[x1, y1].piece.name == "King")
+                        {
+                            if (x1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1 + 1, y1))
+                            {
+                                if (board[x1 + 1, y1 ].piece != null)
+                                {
+                                    if (board[x1 + 1, y1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1].canbehit = true;
+                                        check(board[x1 + 1, y1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 1, y1].canbehit = true;
+                                }
+                            }
+                            if (x1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1 - 1, y1))
+                            {
+                                if (board[x1 - 1, y1].piece != null)
+                                {
+                                    if (board[x1 -1, y1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 -1, y1 ].canbehit = true;
+                                        check(board[x1 -1, y1 ]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 1, y1].canbehit = true;
+                                }
+                            }
+                            if (y1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1, y1 - 1))
+                            {
+                                if (board[x1 , y1 -1].piece != null)
+                                {
+                                    if (board[x1, y1 -1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1 -1].canbehit = true;
+                                        check(board[x1, y1 -1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1, y1 - 1].canbehit = true;
+                                }
+                            }
+                            if (y1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1, y1 + 1))
+                            {
+                                if (board[x1 , y1 + 1].piece != null)
+                                {
+                                    if (board[x1, y1 + 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1 + 1].canbehit = true;
+                                        check(board[x1 , y1 + 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1, y1 + 1].canbehit = true;
+                                }
+                            }
+                            if (x1 + 1 > 7 || y1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1 + 1, y1 + 1))
+                            {
+                                if (board[x1 + 1, y1 + 1].piece != null)
+                                {
+                                    if (board[x1 + 1, y1 + 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 + 1].canbehit = true;
+                                        check(board[x1 + 1, y1 + 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 1, y1 + 1].canbehit = true;
+                                }
+                            }
+                            if (x1 - 1 < 0 || y1 + 1 > 7) { }
+                            else if (checkpath(x1, y1, x1 - 1, y1 + 1))
+                            {
+                                if (board[x1 -1, y1 + 1].piece != null)
+                                {
+                                    if (board[x1 -1, y1 + 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 -1, y1 + 1].canbehit = true;
+                                        check(board[x1 -1, y1 + 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 1, y1 + 1].canbehit = true;
+                                }
+                            }
+                            if (x1 + 1 > 7 || y1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1 + 1, y1 - 1))
+                            {
+                                if (board[x1 + 1, y1 -1].piece != null)
+                                {
+                                    if (board[x1 + 1, y1 -1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 -1].canbehit = true;
+                                        check(board[x1 + 1, y1 -1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + 1, y1 - 1].canbehit = true;
+                                }
+                            }
+                            if (x1 - 1 < 0 || y1 - 1 < 0) { }
+                            else if (checkpath(x1, y1, x1 - 1, y1 - 1))
+                            {
+                                if (board[x1 - 1, y1 - 1].piece != null)
+                                {
+                                    if (board[x1 - 1, y1 - 1].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 - 1].canbehit = true;
+                                        check(board[x1 - 1, y1 - 1]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - 1, y1 - 1].canbehit = true;
+                                }
+                            }
+
+                        }
+                        if (board[x1, y1].piece.name == "Pawn")
+                        {
+                            int x2 = 1;
+                            if (x1 + x2 > 7 || y1 + x2 > 7) { }
+                            else if (checkpath(x1, y1, x1 - x2, y1 + x2))
+                            {
+                                if (board[x1 + x2, y1 + x2].piece != null)
+                                {
+                                    if (board[x1 + x2, y1 + x2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1].piece.diagminus = true;
+                                        board[x1 + x2, y1 + x2].canbehit = true;
+                                        check(board[x1 + x2, y1 + x2]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                            if (x1 - x2 < 0 || y1 + x2 > 7) { }
+                            else if (checkpath(x1, y1, x1 - x2, y1 + x2))
+                            {
+                                if (board[x1 - x2, y1 + x2].piece != null)
+                                {
+                                    if (board[x1 - x2, y1 + x2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1].piece.diagplus = true;
+                                        board[x1 - x2, y1 + x2].canbehit = true;
+                                        check(board[x1 - x2, y1 + x2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - x2, y1 + x2].canbehit = true;
+                                }
+
+                            }
+                            if (x1 + x2 > 7 || y1 - x2 < 0) { }
+                            else if (checkpath(x1, y1, x1 + x2, y1 - x2))
+                            {
+                                if (board[x1 + x2, y1 - x2].piece != null)
+                                {
+                                    if (board[x1 + x2, y1 - x2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1].piece.diagminus = true;
+                                        board[x1 + x2, y1 - x2].canbehit = true;
+                                        check(board[x1 + x2, y1 - x2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 + x2, y1 - x2].canbehit = true;
+                                }
+                            }
+                            if (x1 - x2 < 0 || y1 - x2 < 0) { }
+                            else if (checkpath(x1, y1, x1 - x2, y1 - x2))
+                                if (board[x1 - x2, y1 - x2].piece != null)
+                                {
+                                    if (board[x1 - x2, y1 - x2].iswhite != board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1].piece.diagplus = true;
+                                        board[x1 - x2, y1 - x2].canbehit = true;
+                                        check(board[x1 - x2, y1 - x2]);
+                                    }
+                                }
+                                else
+                                {
+                                    board[x1 - x2, y1 - x2].canbehit = true;
+                                }
+                        }
+                        //foreach (BoardSquare s2 in board)
+                        //{
+                        //    if (s1.piece.movement(s1.x, s2.x, s1.y, s2.y))
+                        //    {
+                        //        if (checkpath(s1.x, s1.y, s2.x, s2.y))
+                        //        {
+                        //            s2.canbehit = true;
+                        //            if (s2.piece != null)
+                        //            {
+                        //                if (s2.piece.name == "King" && s1.iswhite != s2.iswhite)
+                        //                {
+                        //                    Console.WriteLine("Check");
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                    }
+                }
+            }
+        }
+        public void check(BoardSquare s)
+        {
+            if (s.piece != null)
+            {
+                if (s.piece.name == "King")
+                {
+                    Console.WriteLine("Check");
+                }
+            }
+
         }
         public bool place(int x,int y,bool iswhite,string piece)
         {
@@ -142,15 +668,31 @@ namespace Chessinconsolebecausewhy.Model
             {
                 if (checkpath(x1, y1, x2, y2)||board[x1,y1].piece is Knight)
                 {
-                    board[x2, y2].piece = board[x1, y1].piece;
-                    board[x2, y2].iswhite = board[x1, y1].iswhite;
-                    board[x2, y2].piece.hasmoved = true;
-                    board[x1, y1].piece = null;
-                    success = true;
+                    if (iswhiteturn != board[x1, y1].iswhite)
+                    {
+                        board[x2, y2].piece = board[x1, y1].piece;
+                        board[x2, y2].iswhite = board[x1, y1].iswhite;
+                        board[x2, y2].piece.hasmoved = true;
+                        board[x1, y1].piece = null;
+                        success = true;
+                        if (iswhiteturn)
+                        {
+                            iswhiteturn = false;
+                        }
+                        else
+                        {
+                            iswhiteturn = true;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not your turn");
+                    }
                 }
             }
             if (success)
             {
+                updatecanbehit();
                 print();
             }
             return success;
@@ -163,11 +705,26 @@ namespace Chessinconsolebecausewhy.Model
             {
                 if ((checkpath(x1, y1, x2, y2) || board[x1, y1].piece is Knight)&&(board[x1,y1].iswhite!=board[x2,y2].iswhite))
                 {
-                    board[x2, y2].piece = board[x1, y1].piece;
-                    board[x2, y2].iswhite = board[x1, y1].iswhite;
-                    board[x2, y2].piece.hasmoved = true;
-                    board[x1, y1].piece = null;
-                    success = true;
+                    if (iswhiteturn != board[x1, y1].iswhite)
+                    {
+                        board[x2, y2].piece = board[x1, y1].piece;
+                        board[x2, y2].iswhite = board[x1, y1].iswhite;
+                        board[x2, y2].piece.hasmoved = true;
+                        board[x1, y1].piece = null;
+                        success = true;
+                        if (iswhiteturn)
+                        {
+                            iswhiteturn = false;
+                        }
+                        else
+                        {
+                            iswhiteturn = true;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not your turn");
+                    }
                 }
                 else
                 {
@@ -176,6 +733,7 @@ namespace Chessinconsolebecausewhy.Model
             }
             if (success)
             {
+                updatecanbehit();
                 print();
             }
             return success;
@@ -188,19 +746,35 @@ namespace Chessinconsolebecausewhy.Model
             {
                 if (checkpath(x1, y1, x2, y2) || board[x1, y1].piece is Knight)
                 {
-                    board[x2, y2].piece = board[x1, y1].piece;
-                    board[x2, y2].iswhite = board[x1, y1].iswhite;
-                    board[x2, y2].piece.hasmoved = true;
-                    board[x1, y1].piece = null;
-                    board[x4, y4].piece = board[x3, y3].piece;
-                    board[x4, y4].iswhite = board[x3, y3].iswhite;
-                    board[x4, y4].piece.hasmoved = true;
-                    board[x3, y3].piece = null;
-                    success = true;
+                    if (iswhiteturn != board[x1, y1].iswhite)
+                    {
+                        board[x2, y2].piece = board[x1, y1].piece;
+                        board[x2, y2].iswhite = board[x1, y1].iswhite;
+                        board[x2, y2].piece.hasmoved = true;
+                        board[x1, y1].piece = null;
+                        board[x4, y4].piece = board[x3, y3].piece;
+                        board[x4, y4].iswhite = board[x3, y3].iswhite;
+                        board[x4, y4].piece.hasmoved = true;
+                        board[x3, y3].piece = null;
+                        success = true;
+                        if (iswhiteturn)
+                        {
+                            iswhiteturn = false;
+                        }
+                        else
+                        {
+                            iswhiteturn = true;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not your turn");
+                    }
                 }
             }
             if (success)
             {
+                updatecanbehit();
                 print();
             }
             return success;
@@ -282,18 +856,19 @@ namespace Chessinconsolebecausewhy.Model
             {
                 for (int i = 1; y1+i > y2; i++)
                 {
-                    if (board[x1-i, y1+i].piece != null)
+                    if (x1 - i < 0 || y1 + i > 7)
+                    {
+                        success = false;
+                    }
+                    else if (board[x1-i, y1+i].piece != null)
                     {
                         success = false;
                     }
                 }
             }
-            if (!success)
-            {
-                Console.WriteLine("Piece in the way");
-            }
                 return success;
         }
+
         public void print()
         {
             Console.WriteLine();

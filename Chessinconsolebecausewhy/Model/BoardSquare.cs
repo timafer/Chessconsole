@@ -10,10 +10,14 @@ namespace Chessinconsolebecausewhy.Model
     {
         public bool iswhite{ get; set;}
         public Piece piece {get; set;}
+        public bool canbehit { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
         public BoardSquare(bool _iswhite,Piece _piece)
         {
             iswhite = _iswhite;
             piece = _piece;
+            canbehit = false;
         }
     }
 }

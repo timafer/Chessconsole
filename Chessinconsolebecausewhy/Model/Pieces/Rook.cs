@@ -8,8 +8,6 @@ namespace Chessinconsolebecausewhy.Model
 {
     class Rook : Piece
     {
-        public override string name { get; set; }
-        public override bool hasmoved { get; set; }
         public Rook()
         {
             name = "Rook";
