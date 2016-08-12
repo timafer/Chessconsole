@@ -8,8 +8,13 @@ namespace Chessinconsolebecausewhy.Model
 {
     class Board
     {
-        public bool iswhiteturn=true;
+        public bool iswhiteturn=false;
         public BoardSquare[,] board = new BoardSquare[8, 8];
+        private bool whitecheck;
+        private bool blackcheck;
+        private bool blackcheckmate;
+        private bool whitecheckmate;
+
         public Board()
         {
             for (int i = 0; i < 8; i++)
@@ -21,16 +26,16 @@ namespace Chessinconsolebecausewhy.Model
                     board[i, o].y = o;
                 }
             }
-            for (int i = 0; i < 8; i++)
-            {
-                for (int o = 0; o < 8; o++)
-                {
-                    if (i == 0 || i == 7)
-                    {
-                        placeends(o, i);
-                    }
-                }
-            }
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    for (int o = 0; o < 8; o++)
+            //    {
+            //        if (i == 0 || i == 7)
+            //        {
+            //            placeends(o, i);
+            //        }
+            //    }
+            //}
         }
         public void placeends(int i, int o)
         {
@@ -107,8 +112,22 @@ namespace Chessinconsolebecausewhy.Model
             }
             return iswhite;
         }
+        // This is long but the shorter alterntive takes 10+ sec per move
         public void updatecanbehit()
         {
+            whitecheck = false;
+            blackcheck = false;
+            whitecheckmate = false;
+            blackcheckmate = false;
+            foreach (BoardSquare s in board)
+            {
+
+                    s.canbehitbywhite = false;
+                    s.canbehitbyblack = false;
+                s.blackchecker = false;
+                s.whitechecker = false;
+                s.check = false; 
+            }
             for (int x1 = 0; x1 < 8; x1++)
             {
                 for (int y1 = 0; y1 < 8; y1++)
@@ -126,13 +145,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 + x2, y1 + x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 + x2, y1 + x2].canbehit = true;
-                                            check(board[x1 + x2, y1 + x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 + x2, y1 + x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 + x2, y1 + x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, 1 + x2, y1 + x2);
                                         }
                                     }
                                     else
                                     {
-
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 + x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + x2, y1 + x2].canbehitbyblack = true;
+                                        }
                                     }
                                 }
                                 if (x1 - x2 < 0 || y1 + x2 > 7) { }
@@ -142,13 +175,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 - x2, y1 + x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 - x2, y1 + x2].canbehit = true;
-                                            check(board[x1 - x2, y1 + x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 - x2, y1 + x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 - x2, y1 + x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 - x2, y1 + x2);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1 - x2, y1 + x2].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 + x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - x2, y1 + x2].canbehitbyblack = true;
+                                        }
                                     }
                                    
                                 }
@@ -159,13 +206,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 + x2, y1 - x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 + x2, y1 - x2].canbehit = true;
-                                            check(board[x1 + x2, y1 - x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 + x2, y1 - x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 + x2, y1-+ x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 + x2, y1 - x2);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1 + x2, y1 - x2].canbehit = true;
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 + x2, y1 - x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 + x2, y1 - +x2].canbehitbyblack = true;
+                                            }
                                     }
                                     
                                     
@@ -176,13 +237,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 - x2, y1 - x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 - x2, y1 - x2].canbehit = true;
-                                            check(board[x1 - x2, y1 - x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 - x2, y1 - x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 - x2, y1 - x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 - x2, y1 - x2);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1 - x2, y1 - x2].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 - x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - x2, y1 - x2].canbehitbyblack = true;
+                                        }
                                     }
                             }
                         }
@@ -197,13 +272,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 + x2, y1].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 + x2, y1 ].canbehit = true;
-                                            check(board[x1 + x2, y1]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 + x2, y1].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 +x2, y1].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 + x2, y1);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1 + x2, y1].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + x2, y1].canbehitbyblack = true;
+                                        }
                                     }
                                  }
                                 if (x1 - x2 < 0) { }
@@ -213,13 +302,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 - x2, y1].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 - x2, y1].canbehit = true;
-                                            check(board[x1 - x2, y1]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1 - x2, y1].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 - x2, y1].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 - x2, y1);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1 - x2, y1].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - x2, y1].canbehitbyblack = true;
+                                        }
                                     }
                                 }
                                 if (y1 - x2 < 0) { }
@@ -229,13 +332,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 , y1 - x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 , y1 - x2].canbehit = true;
-                                            check(board[x1, y1 -x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1, y1-x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1 , y1-x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1, y1 -x2);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1, y1 - x2].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1, y1 - x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1, y1 - x2].canbehitbyblack = true;
+                                        }
                                     }
                                 }
                                 if (y1 + x2 > 7) { }
@@ -245,13 +362,27 @@ namespace Chessinconsolebecausewhy.Model
                                     {
                                         if (board[x1 , y1 + x2].iswhite != board[x1, y1].iswhite)
                                         {
-                                            board[x1 , y1 + x2].canbehit = true;
-                                            check(board[x1 , y1 + x2]);
+                                            if (board[x1, y1].iswhite)
+                                            {
+                                                board[x1, y1 + x2].canbehitbywhite = true;
+                                            }
+                                            else
+                                            {
+                                                board[x1, y1 + x2].canbehitbyblack = true;
+                                            }
+                                            check(x1, y1, x1 , y1 + x2);
                                         }
                                     }
                                     else
                                     {
-                                        board[x1, y1 + x2].canbehit = true;
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1, y1 + x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1, y1 + x2].canbehitbyblack = true;
+                                        }
                                     }
                                 }
                             }
@@ -265,13 +396,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 1, y1+2].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 1, y1+2].canbehit = true;
-                                        check(board[x1 + 1, y1+2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1+1, y1 + 2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1+1, y1 + 2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 1, y1+2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 1, y1+2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 + 2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 1, y1 + 2].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 + 1 > 7 || y1 - 2 < 0) { }
@@ -281,13 +426,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 1, y1 - 2].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 1, y1 - 2].canbehit = true;
-                                        check(board[x1 + 1, y1 - 2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + 1, y1 - 2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + 1, y1 - 2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 1, y1 - 2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 1, y1 - 2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 - 2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 1, y1 - 2].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 1 < 0 || y1 + 2 > 7) { }
@@ -297,13 +456,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 - 1, y1 + 2].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 - 1, y1 + 2].canbehit = true;
-                                        check(board[x1 - 1, y1 + 2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 1, y1 +2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 1, y1 + 2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - 1, y1 + 2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 1, y1 + 2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 +2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 1, y1+ 2].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 1 <0 || y1 - 2 <0) { }
@@ -313,13 +486,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 - 1, y1 - 2].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 - 1, y1 - 2].canbehit = true;
-                                        check(board[x1 - 1, y1 - 2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 1, y1 - 2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 1, y1 -2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - 1, y1 - 2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 1, y1 - 2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 - 2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 1, y1 - 2].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 + 2 > 7 || y1 + 1 > 7) { }
@@ -329,13 +516,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 2, y1 + 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 2, y1 + 1].canbehit = true;
-                                        check(board[x1 + 2, y1 + 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + 2, y1 + 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + 2, y1 + 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 2, y1 + 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 2, y1 + 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 2, y1 + 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 2, y1 + 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 + 2 > 7 || y1 - 1 < 0) { }
@@ -345,13 +546,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 2, y1 - 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 2, y1 - 1].canbehit = true;
-                                        check(board[x1 + 2, y1 - 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + 2, y1 - 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + 2, y1 - 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 2, y1 - 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 2, y1 - 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 2, y1 - 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 2, y1 - 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 2 < 0 || y1 + 1 > 7) { }
@@ -361,13 +576,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 - 2, y1 + 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 - 2, y1 + 1].canbehit = true;
-                                        check(board[x1 - 2, y1 + 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 2, y1 + 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 2, y1 + 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - 2, y1 + 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 2, y1 + 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 2, y1 + 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 2, y1 + 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 2 < 0 || y1 - 1 < 0) { }
@@ -377,13 +606,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 - 2, y1 - 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 - 2, y1 - 1].canbehit = true;
-                                        check(board[x1 - 1, y1 - 2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 2, y1 -1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 2, y1 - 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - 1, y1 - 2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 2, y1 - 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 2, y1 - 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 2, y1 - 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
 
@@ -397,13 +640,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 1, y1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 1, y1].canbehit = true;
-                                        check(board[x1 + 1, y1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + 1, y1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + 1, y1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 1, y1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 1, y1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 1, y1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 1 < 0) { }
@@ -413,13 +670,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 -1, y1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 -1, y1 ].canbehit = true;
-                                        check(board[x1 -1, y1 ]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 -1, y1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 1, y1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 -1, y1 );
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 1, y1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 1, y1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (y1 - 1 < 0) { }
@@ -429,13 +700,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1, y1 -1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1, y1 -1].canbehit = true;
-                                        check(board[x1, y1 -1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 , y1-1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 , y1-1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1, y1 -1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1, y1 - 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1 - 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1, y1 - 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (y1 + 1 > 7) { }
@@ -445,13 +730,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1, y1 + 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1, y1 + 1].canbehit = true;
-                                        check(board[x1 , y1 + 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1, y1 + 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1, y1 + 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 , y1 + 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1, y1 + 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1, y1 + 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1, y1 + 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 + 1 > 7 || y1 + 1 > 7) { }
@@ -461,13 +760,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 1, y1 + 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 1, y1 + 1].canbehit = true;
-                                        check(board[x1 + 1, y1 + 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1+1, y1 + 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1+1, y1 + 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 1, y1 + 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 1, y1 + 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 + 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 1, y1 + 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 1 < 0 || y1 + 1 > 7) { }
@@ -477,13 +790,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 -1, y1 + 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 -1, y1 + 1].canbehit = true;
-                                        check(board[x1 -1, y1 + 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 1, y1 + 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 1, y1 + 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 -1, y1 + 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 1, y1 + 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 + 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 1, y1 + 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 + 1 > 7 || y1 - 1 < 0) { }
@@ -493,13 +820,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 + 1, y1 -1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 + 1, y1 -1].canbehit = true;
-                                        check(board[x1 + 1, y1 -1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + 1, y1 - 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + 1, y1 - 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + 1, y1 -1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + 1, y1 - 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + 1, y1 - 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + 1, y1 - 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - 1 < 0 || y1 - 1 < 0) { }
@@ -509,13 +850,27 @@ namespace Chessinconsolebecausewhy.Model
                                 {
                                     if (board[x1 - 1, y1 - 1].iswhite != board[x1, y1].iswhite)
                                     {
-                                        board[x1 - 1, y1 - 1].canbehit = true;
-                                        check(board[x1 - 1, y1 - 1]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - 1, y1 - 1].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - 1, y1 - 1].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - 1, y1 - 1);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - 1, y1 - 1].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - 1, y1 - 1].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - 1, y1 - 1].canbehitbyblack = true;
+                                    }
                                 }
                             }
 
@@ -531,14 +886,28 @@ namespace Chessinconsolebecausewhy.Model
                                     if (board[x1 + x2, y1 + x2].iswhite != board[x1, y1].iswhite)
                                     {
                                         board[x1, y1].piece.diagminus = true;
-                                        board[x1 + x2, y1 + x2].canbehit = true;
-                                        check(board[x1 + x2, y1 + x2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 + x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + x2, y1 + x2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + x2, y1 + x2);
                                     }
                                 }
                             }
                             else
                             {
-
+                                if (board[x1, y1].iswhite)
+                                {
+                                    board[x1 + x2, y1 + x2].canbehitbywhite = true;
+                                }
+                                else
+                                {
+                                    board[x1 + x2, y1 + x2].canbehitbyblack = true;
+                                }
                             }
                             if (x1 - x2 < 0 || y1 + x2 > 7) { }
                             else if (checkpath(x1, y1, x1 - x2, y1 + x2))
@@ -548,13 +917,27 @@ namespace Chessinconsolebecausewhy.Model
                                     if (board[x1 - x2, y1 + x2].iswhite != board[x1, y1].iswhite)
                                     {
                                         board[x1, y1].piece.diagplus = true;
-                                        board[x1 - x2, y1 + x2].canbehit = true;
-                                        check(board[x1 - x2, y1 + x2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 + x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - x2, y1 + x2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 - x2, y1 + x2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - x2, y1 + x2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - x2, y1 + x2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - x2, y1 + x2].canbehitbyblack = true;
+                                    }
                                 }
 
                             }
@@ -566,13 +949,27 @@ namespace Chessinconsolebecausewhy.Model
                                     if (board[x1 + x2, y1 - x2].iswhite != board[x1, y1].iswhite)
                                     {
                                         board[x1, y1].piece.diagminus = true;
-                                        board[x1 + x2, y1 - x2].canbehit = true;
-                                        check(board[x1 + x2, y1 - x2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 + x2, y1 - x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 + x2, y1 - x2].canbehitbyblack = true;
+                                        }
+                                        check(x1, y1, x1 + x2, y1 - x2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 + x2, y1 - x2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 + x2, y1 - x2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 + x2, y1 - x2].canbehitbyblack = true;
+                                    }
                                 }
                             }
                             if (x1 - x2 < 0 || y1 - x2 < 0) { }
@@ -582,13 +979,27 @@ namespace Chessinconsolebecausewhy.Model
                                     if (board[x1 - x2, y1 - x2].iswhite != board[x1, y1].iswhite)
                                     {
                                         board[x1, y1].piece.diagplus = true;
-                                        board[x1 - x2, y1 - x2].canbehit = true;
-                                        check(board[x1 - x2, y1 - x2]);
+                                        if (board[x1, y1].iswhite)
+                                        {
+                                            board[x1 - x2, y1 - x2].canbehitbywhite = true;
+                                        }
+                                        else
+                                        {
+                                            board[x1 - x2, y1 - x2].canbehitbyblack = true;
+                                        }
+                                        check(x1,y1,x1 - x2, y1 - x2);
                                     }
                                 }
                                 else
                                 {
-                                    board[x1 - x2, y1 - x2].canbehit = true;
+                                    if (board[x1, y1].iswhite)
+                                    {
+                                        board[x1 - x2, y1 - x2].canbehitbywhite = true;
+                                    }
+                                    else
+                                    {
+                                        board[x1 - x2, y1 - x2].canbehitbyblack = true;
+                                    }
                                 }
                         }
                         //foreach (BoardSquare s2 in board)
@@ -611,17 +1022,228 @@ namespace Chessinconsolebecausewhy.Model
                     }
                 }
             }
-        }
-        public void check(BoardSquare s)
-        {
-            if (s.piece != null)
+            whitecheckmate = false;
+            blackcheckmate = false;
+            for (int x=0;x<8;x++)
             {
-                if (s.piece.name == "King")
+                for (int y = 0; y < 8; y ++)
                 {
-                    Console.WriteLine("Check");
+                    BoardSquare s = board[x, y];
+                    if (s.piece != null)
+                    {
+                        if (s.piece.name == "King")
+                        {
+                            checkmate(x,y);
+                        }
+                    }
+                }
+            }
+               
+            if (!whitecheck)
+            {
+                Console.WriteLine("White King:Good");
+            }
+            else if (whitecheckmate)
+            {
+                Console.WriteLine("White King:Checkmate");
+            }
+            else
+            {
+                Console.WriteLine("White King:Check");
+            }
+            if (!blackcheck)
+            {
+                Console.WriteLine("Black King:Good");
+            }
+            else if (blackcheckmate)
+            {
+                Console.WriteLine("Black King:Checkmate");
+            }
+            else
+            {
+                Console.WriteLine("Black king:Check");
+            }
+        }
+        public void check(int cx,int cy,int x,int y)
+        {
+            if (board[x,y].piece != null)
+            {
+                if (board[x, y].piece.name == "King")
+                {
+                    if (board[x, y].iswhite)
+                    {
+                        whitecheck = true;
+                        board[cx, cy].whitechecker = true;
+                    }
+                    else
+                    {
+                        blackcheck = true;
+                        board[cx, cy].blackchecker = true;
+                    }
+                    board[x, y].check = true;
+                    blackcheck = true;
                 }
             }
 
+        }
+        public void checkmate(int x, int y)
+        {
+            BoardSquare s1 = board[x, y];
+            bool mate = true;
+            List<BoardSquare> checkers = new List<BoardSquare>();
+            for (int i = 0; i < 7; i++)
+            {
+                for (int o = 0; o < 7; o++)
+                {
+                    bool canbestoped = false;
+                    BoardSquare s2 = board[i, o];
+                    if (s1.iswhite && s2.whitechecker && s2.canbehitbyblack)
+                    {
+                    }
+                    else if (s2.blackchecker && s2.canbehitbywhite)
+                    {
+                    }
+                    else if ((s1.iswhite && s2.whitechecker) || (s2.blackchecker || !s1.iswhite))
+                    {
+                        if (s2.piece != null)
+                        {
+                            if (s2.piece.name == "Queen" || s2.piece.name == "Bishop")
+                            {
+                                if (x < i && y < o)
+                                {
+                                    int v = o;
+                                    for (int d = i; d > x; d--, v--)
+                                    {
+                                        if (board[d, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else if (x > i && y < o)
+                                {
+                                    int v = o;
+                                    for (int d = i; d < x; d++, v--)
+                                    {
+                                        if (board[d, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else if (x < i && y > o)
+                                {
+                                    int v = o;
+                                    for (int d = i; d > x; d--, v++)
+                                    {
+                                        if (board[d, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    int v = o;
+                                    for (int d = i; d > x; d++, v++)
+                                    {
+                                        if (board[d, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+
+                            }
+                            if (s2.piece.name == "Queen" || s2.piece.name == "Rook")
+                            {
+                                if (x < i && y == o)
+                                {
+                                    for (int d = i; d > x; d--)
+                                    {
+                                        if (board[d, o].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else if (x > i && y == o)
+                                {
+                                    for (int d = i; d < x; d++)
+                                    {
+                                        if (board[d, o].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else if (x == i && y > o)
+                                {
+                                    for (int v = o; v < y; v++)
+                                    {
+                                        if (board[x, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int v = o; v > y; v--)
+                                    {
+                                        if (board[x, v].canbehitbyblack)
+                                        {
+                                            canbestoped = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if((s1.iswhite && s2.whitechecker&&!canbestoped) || (s2.blackchecker || !s1.iswhite&&canbestoped))
+                    {
+                        checkers.Add(s2);
+                    }
+                    
+                }
+            }
+            if (checkers.Count == 0)
+            {
+                mate = false;
+            }
+            
+
+                foreach (BoardSquare s2 in board)
+            {
+                if (s1.piece.movement(s1.x, s2.x, s1.y, s2.y))
+                {
+                    if (checkpath(s1.x, s1.y, s2.x, s2.y)&&s2.piece==null)
+                    {
+                        if (s1.iswhite)
+                        {
+                            if (!s2.canbehitbyblack||s2.canbehitbywhite)
+                            {
+                                mate = false;
+                            }
+                        }
+                        else
+                        {
+                            if (!s2.canbehitbywhite||s2.canbehitbywhite)
+                            {
+                                mate = false;
+                            }
+                        }
+                        }
+                    }
+            }
+            if (s1.iswhite)
+            {
+                whitecheckmate = mate;
+            }
+            else
+            {
+                blackcheckmate = mate;
+            }
         }
         public bool place(int x,int y,bool iswhite,string piece)
         {
@@ -658,6 +1280,7 @@ namespace Chessinconsolebecausewhy.Model
                         break;
                 }
                 board[x, y].iswhite = iswhite;
+                updatecanbehit();
             }
             return success;
         }
@@ -691,9 +1314,9 @@ namespace Chessinconsolebecausewhy.Model
                 }
             }
             if (success)
-            {
-                updatecanbehit();
+            {             
                 print();
+                updatecanbehit();
             }
             return success;
 
@@ -733,8 +1356,8 @@ namespace Chessinconsolebecausewhy.Model
             }
             if (success)
             {
-                updatecanbehit();
                 print();
+                updatecanbehit();
             }
             return success;
 
@@ -774,8 +1397,8 @@ namespace Chessinconsolebecausewhy.Model
             }
             if (success)
             {
-                updatecanbehit();
                 print();
+                updatecanbehit();
             }
             return success;
         }

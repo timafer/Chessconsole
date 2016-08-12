@@ -23,6 +23,8 @@ namespace Chessinconsolebecausewhy.Model
             else if((diagminus && y2 - y1 == -1 && x2 - x1 == 1) || (diagminus && y2 - y1 == 1 && x2 - x1 == 1) ||
                 (diagplus && y2 - y1 == -1 && x2 - x1 == -1) || ( diagplus && y2 - y1 == 1 && x2 - x1 == -1))
             {
+                diagminus = false;
+                diagplus = false;
                 return true;
             }
             else
